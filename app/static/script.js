@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
     const submitButton = document.getElementById("submitButton");
     submitButton.addEventListener("click", async function() {
-        const qiskitCodeInput = document.getElementById("qiskitCodeInput").value.trim();
+        const promptInput = document.getElementById("promptInput").value.trim();
         const qiskitCode = document.getElementById("qiskitCode")
-        qiskitCode.textContent = formatSingleLineCodeToString(qiskitCodeInput)
-        if (qiskitCodeInput === "") {
+        
+        if (promptInput === "") {
             alert("Please enter Qiskit code.");
             return;
         }
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ code: qiskitCodeInput }),
+                body: JSON.stringify({ prompt: promptInput }),
             });
 
             if (!response.ok) {
@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const circuitImage = document.getElementById("circuitImage");
             circuitImage.textContent = result.output;
+            qiskitCode.textContent = result.code;
 
         } catch (error) {
             console.error("Error:", error);
@@ -33,11 +34,3 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
-
-function formatSingleLineCodeToString(code) {
-    let statements = code.trim().split(';');
-    statements = statements.map(statement => statement.trim());
-    let formattedCode = statements.join('\n');
-    
-    return formattedCode;
-}
